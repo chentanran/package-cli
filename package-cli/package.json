@@ -15,6 +15,9 @@
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "package-cli-lib": "^1.0.0"
+  },
   "bugs": {
     "url": "https://github.com/chentanran/package-cli/issues"
   },

@@ -25,5 +25,9 @@
   },
   "bugs": {
     "url": "https://github.com/chentanran/package-cli/issues"
+  },
+  "gitHead": "c2e011ca81ffd8276a84c8ac88d5c0750ad7cb47",
+  "publishConfig": {
+    "access": "public"
   }
 }

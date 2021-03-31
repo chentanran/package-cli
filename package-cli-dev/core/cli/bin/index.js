@@ -2,7 +2,6 @@
 
 const importLocal = require('import-local')
 
-console.log(importLocal(__filename), __filename, '__filename')
 if (importLocal(__filename)) {
     require('npmlog').info('cli', '正在使用 本地版本')
 } else {

@@ -5,7 +5,7 @@
   "author": "chentanran <215920697@qq.com>",
   "homepage": "https://github.com/chentanran/package-cli#readme",
   "license": "ISC",
-  "main": "./bin/index",
+  "main": "",
   "bin": {
     "package-cli-dev": "bin/index.js"
   },

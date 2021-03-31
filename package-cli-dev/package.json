@@ -12,6 +12,6 @@
     "lerna": "^4.0.0"
   },
   "dependencies": {
-    "@package-cli-dev/core": "0.0.4"
+    "@package-cli-dev/core": "0.0.5"
   }
 }

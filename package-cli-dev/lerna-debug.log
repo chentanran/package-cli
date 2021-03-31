@@ -1,11 +1,11 @@
-31 error Error: Command failed with exit code 1: git add -- packages/utils/package.json packages/utils/package-lock.json packages/core/package.json packages/core/package-lock.json lerna.json
-31 error The following paths are ignored by one of your .gitignore files:
-31 error package-cli-dev/packages/core/package-lock.json
-31 error package-cli-dev/packages/utils/package-lock.json
-31 error hint: Use -f if you really want to add them.
-31 error hint: Turn this message off by running
-31 error hint: "git config advice.addIgnoredFile false"
-31 error     at makeError (C:\Users\admin\AppData\Roaming\npm\node_modules\lerna\node_modules\execa\lib\error.js:59:11)
-31 error     at handlePromise (C:\Users\admin\AppData\Roaming\npm\node_modules\lerna\node_modules\execa\index.js:114:26)
-31 error     at processTicksAndRejections (internal/process/task_queues.js:93:5)
-31 error     at async Promise.all (index 0)
+0 silly argv {
+0 silly argv   _: [ 'add' ],
+0 silly argv   globs: [],
+0 silly argv   lernaVersion: '4.0.0',
+0 silly argv   '$0': 'C:\\Users\\admin\\AppData\\Roaming\\npm\\node_modules\\lerna\\cli.js',
+0 silly argv   pkg: 'package-cli-dev'
+0 silly argv }
+1 notice cli v4.0.0
+2 verbose rootPath E:\git\pageage-cli\package-cli-dev
+3 error Error: 404 Not Found - GET https://registry.npmjs.org/package-cli-dev - Not found
+3 error     at C:\Users\admin\AppData\Roaming\npm\node_modules\lerna\node_modules\npm-registry-fetch\check-response.js:123:15

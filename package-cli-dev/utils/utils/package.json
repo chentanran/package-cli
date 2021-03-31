@@ -7,6 +7,7 @@
   "license": "ISC",
   "main": "lib/utils.js",
   "dependencies": {
+    "@package-cli-dev/core": "file:..\\..\\core\\cli",
     "package-cli-name": "^1.0.0"
   },
   "directories": {

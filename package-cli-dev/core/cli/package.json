@@ -5,9 +5,15 @@
   "author": "chentanran <215920697@qq.com>",
   "homepage": "https://github.com/chentanran/package-cli#readme",
   "license": "ISC",
-  "main": "lib/core.js",
+  "main": "./bin/index",
+  "bin": {
+    "package-cli-dev": "bin/index.js"
+  },
   "dependencies": {
-    "@package-cli-dev/utils": "^0.0.3"
+    "@package-cli-dev/utils": "file:../../utils/utils",
+    "import-local": "^3.0.2",
+    "npmlog": "^4.1.2",
+    "package-cli-name": "^1.0.0"
   },
   "directories": {
     "lib": "lib",

@@ -1,6 +1,6 @@
 {
   "name": "@package-cli-dev/core",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "package-cli-dev core",
   "author": "chentanran <215920697@qq.com>",
   "homepage": "https://github.com/chentanran/package-cli#readme",
@@ -10,8 +10,8 @@
     "package-cli-dev": "bin/index.js"
   },
   "dependencies": {
-    "@package-cli-dev/log": "file:../../utils/log",
     "@package-cli-dev/get-npm-info": "file:../../utils/get-npm-info",
+    "@package-cli-dev/log": "file:../../utils/log",
     "colors": "^1.4.0",
     "dotenv": "^8.2.0",
     "import-local": "^3.0.2",

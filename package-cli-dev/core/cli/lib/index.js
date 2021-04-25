@@ -14,7 +14,7 @@ const constant = require('./const');
 
 let args = {}
 
-function core() {
+async function core() {
     // TODO
     try {
         checkPkgVersion() // 查看包版本
@@ -23,9 +23,24 @@ function core() {
         checkUserHome()
         checkInputArgs()
         checkEnv()
+       await checkGlobalUpdate() 
     } catch(e) {
         log.error(e.message)
     }
+}
+
+async function checkGlobalUpdate() {
+    // 获取当前版本号
+    const currentVersion = pkg.version
+    const npmName = pkg.name
+    const { getNpmSemverVersion } = require('@package-cli-dev/get-npm-info')
+    const lastVersions = await getNpmSemverVersion(currentVersion, npmName)
+    // 获取最新版本号，提示用户更新到该版本
+    // if (lastVersions && semver.gt(lastVersions, currentVersion)) {
+        log.warn(colors.yellow(`请手动更新${npmName}, 当前版本：${currentVersion}, 最新版本：${lastVersions}     
+            更新命令： npm install -g ${npmName}
+        `))
+    // }
 }
 
 function checkEnv() {

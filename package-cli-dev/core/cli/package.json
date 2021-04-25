@@ -10,7 +10,7 @@
     "package-cli-dev": "bin/index.js"
   },
   "dependencies": {
-    "@package-cli-dev/get-npm-info": "^0.0.8",
+    "@package-cli-dev/getnpminfo": "^0.0.8",
     "@package-cli-dev/log": "^0.0.8",
     "colors": "^1.4.0",
     "dotenv": "^8.2.0",
@@ -40,7 +40,7 @@
   "bugs": {
     "url": "https://github.com/chentanran/package-cli/issues"
   },
-  "gitHead": "2a5368ba514919dd14d319ed1ce3ed4339106cb5",
+  "gitHead": "d10468f76b39beb3cca7a6126b9b5515c2493da9",
   "publishConfig": {
     "access": "public"
   }

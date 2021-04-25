@@ -1,5 +1,5 @@
 {
-  "name": "@package-cli-dev/get-npm-info",
+  "name": "@package-cli-dev/getnpminfo",
   "version": "0.0.8",
   "description": "> TODO: description",
   "author": "chentanran <215920697@qq.com>",
@@ -28,5 +28,5 @@
     "semver": "^7.3.5",
     "url-join": "^4.0.1"
   },
-  "gitHead": "2a5368ba514919dd14d319ed1ce3ed4339106cb5"
+  "gitHead": "d10468f76b39beb3cca7a6126b9b5515c2493da9"
 }

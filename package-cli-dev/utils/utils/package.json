@@ -7,7 +7,7 @@
   "license": "ISC",
   "main": "lib/utils.js",
   "dependencies": {
-    "@package-cli-dev/core": "file:..\\..\\core\\cli",
+    "@package-cli-dev/core": "^0.0.7",
     "package-cli-name": "^1.0.0"
   },
   "directories": {
@@ -27,7 +27,7 @@
   "bugs": {
     "url": "https://github.com/chentanran/package-cli/issues"
   },
-  "gitHead": "c2e011ca81ffd8276a84c8ac88d5c0750ad7cb47",
+  "gitHead": "2a5368ba514919dd14d319ed1ce3ed4339106cb5",
   "publishConfig": {
     "access": "public"
   }

@@ -10,7 +10,7 @@
     "package-cli-dev": "bin/index.js"
   },
   "dependencies": {
-    "@package-cli-dev/getnpminfo": "^0.0.8",
+    "@package-cli-dev/get-npm-info": "^0.0.8",
     "@package-cli-dev/log": "^0.0.8",
     "colors": "^1.4.0",
     "dotenv": "^8.2.0",

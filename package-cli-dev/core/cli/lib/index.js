@@ -6,6 +6,7 @@ const path = require('path')
 const semver = require('semver')
 const colors = require('colors')
 const userHome = require('user-home')
+const commander = require('commander')
 const pathExists = require('path-exists').sync
 const log = require('@package-cli-dev/log')
 
@@ -13,6 +14,7 @@ const pkg = require('../package.json')
 const constant = require('./const');
 
 let args = {}
+const program = new commander.Command()
 
 async function core() {
     // TODO
@@ -24,9 +26,17 @@ async function core() {
         checkInputArgs()
         checkEnv()
        await checkGlobalUpdate() 
+       registerCommand()
     } catch(e) {
         log.error(e.message)
     }
+}
+
+function registerCommand() {
+    program
+        .version(pkg.version)
+    
+    program.parse(process.argv)
 }
 
 async function checkGlobalUpdate() {

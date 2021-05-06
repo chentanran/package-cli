@@ -1,8 +1,18 @@
-61 error Error: Command failed with exit code 128: git push --follow-tags --no-verify --atomic origin main
-61 error ssh: connect to host github.com port 22: Connection timed out
-61 error fatal: Could not read from remote repository.
-61 error
-61 error Please make sure you have the correct access rights
-61 error and the repository exists.
-61 error     at makeError (C:\Users\admin\AppData\Roaming\npm\node_modules\lerna\node_modules\execa\lib\error.js:59:11)
-61 error     at handlePromise (C:\Users\admin\AppData\Roaming\npm\node_modules\lerna\node_modules\execa\index.js:114:26)
+0 silly argv {
+0 silly argv   _: [ 'create' ],
+0 silly argv   lernaVersion: '4.0.0',
+0 silly argv   '$0': 'C:\\Users\\admin\\AppData\\Roaming\\npm\\node_modules\\lerna\\cli.js',
+0 silly argv   name: '@imooc-cli-dev/init'
+0 silly argv }
+1 notice cli v4.0.0
+2 verbose rootPath E:\git\pageage-cli\package-cli-dev
+3 error Error: canceled
+3 error     at Interface.<anonymous> (C:\Users\admin\AppData\Roaming\npm\node_modules\lerna\node_modules\read\lib\read.js:66:13)
+3 error     at Interface.emit (events.js:315:20)
+3 error     at Interface._ttyWrite (readline.js:875:16)
+3 error     at ReadStream.onkeypress (readline.js:213:10)
+3 error     at ReadStream.emit (events.js:315:20)
+3 error     at emitKeys (internal/readline/utils.js:345:14)
+3 error     at emitKeys.next (<anonymous>)
+3 error     at ReadStream.onData (readline.js:1144:36)
+3 error     at ReadStream.emit (events.js:315:20)

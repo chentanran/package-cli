@@ -1,15 +1,11 @@
 {
-  "name": "@package-cli-dev/utils",
+  "name": "@package-cli-dev/package",
   "version": "0.0.10",
-  "description": "package-cli-dev utils",
+  "description": "package-cli-dev package",
   "author": "chentanran <215920697@qq.com>",
   "homepage": "https://github.com/chentanran/package-cli#readme",
   "license": "ISC",
   "main": "lib/index.js",
-  "dependencies": {
-    "@package-cli-dev/core": "^0.0.10",
-    "package-cli-name": "^1.0.0"
-  },
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -17,6 +13,12 @@
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@package-cli-dev/utils": "file:../../utils/utils"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chentanran/package-cli.git"
@@ -26,9 +28,5 @@
   },
   "bugs": {
     "url": "https://github.com/chentanran/package-cli/issues"
-  },
-  "gitHead": "d10468f76b39beb3cca7a6126b9b5515c2493da9",
-  "publishConfig": {
-    "access": "public"
   }
 }

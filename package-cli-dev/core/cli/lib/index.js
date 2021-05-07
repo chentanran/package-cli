@@ -10,6 +10,7 @@ const commander = require('commander')
 const pathExists = require('path-exists').sync
 const log = require('@package-cli-dev/log')
 const init = require('@package-cli-dev/init')
+const exec = require('@package-cli-dev/exec')
 
 const pkg = require('../package.json')
 const constant = require('./const');
@@ -38,7 +39,7 @@ function registerCommand() {
     program
         .command('init [projectName]')
         .option('-f, --force', '是否强制初始化项目')
-        .action(init)
+        .action(exec)
     
     program.on('option:debug', function() {
         if (program.debug) {

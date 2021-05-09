@@ -1,6 +1,6 @@
 {
   "name": "@package-cli-dev/exec",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "package-cli-dev exec",
   "author": "chentanran <215920697@qq.com>",
   "homepage": "https://github.com/chentanran/package-cli#readme",
@@ -17,8 +17,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@package-cli-dev/package": "file:../../models/package",
-    "@package-cli-dev/log": "file:../../utils/log"
+    "@package-cli-dev/log": "file:../../utils/log",
+    "@package-cli-dev/package": "file:../../models/package"
   },
   "repository": {
     "type": "git",

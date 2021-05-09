@@ -1,6 +1,6 @@
 {
   "name": "@package-cli-dev/package",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "package-cli-dev package",
   "author": "chentanran <215920697@qq.com>",
   "homepage": "https://github.com/chentanran/package-cli#readme",
@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "@package-cli-dev/format-path": "file:../../utils/format-path",
-    "@package-cli-dev/utils": "file:../../utils/utils",
     "@package-cli-dev/get-npm-info": "file:../../utils/get-npm-info",
+    "@package-cli-dev/utils": "file:../../utils/utils",
     "npminstall": "^4.11.0",
     "pkg-dir": "^5.0.0"
   },

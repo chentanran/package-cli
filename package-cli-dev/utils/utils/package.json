@@ -1,13 +1,13 @@
 {
   "name": "@package-cli-dev/utils",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "package-cli-dev utils",
   "author": "chentanran <215920697@qq.com>",
   "homepage": "https://github.com/chentanran/package-cli#readme",
   "license": "ISC",
   "main": "lib/index.js",
   "dependencies": {
-    "@package-cli-dev/core": "^0.0.10",
+    "@package-cli-dev/core": "^0.0.11",
     "package-cli-name": "^1.0.0"
   },
   "directories": {

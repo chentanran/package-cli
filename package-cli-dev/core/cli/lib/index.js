@@ -42,7 +42,7 @@ function registerCommand() {
         .action(exec)
     
     program.on('option:debug', function() {
-        if (program.debug) {
+        if (program._optionValues.debug) {
             process.env.LOG_LEVEL = 'verbose'
         } else {
             process.env.LOG_LEVEL = 'info'

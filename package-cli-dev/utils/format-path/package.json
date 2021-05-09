@@ -1,7 +1,7 @@
 {
-  "name": "@package-cli-dev/package",
+  "name": "@package-cli-dev/format-path",
   "version": "0.0.10",
-  "description": "package-cli-dev package",
+  "description": "> TODO: description",
   "author": "chentanran <215920697@qq.com>",
   "homepage": "https://github.com/chentanran/package-cli#readme",
   "license": "ISC",
@@ -15,13 +15,6 @@
   ],
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "@package-cli-dev/format-path": "file:../../utils/format-path",
-    "@package-cli-dev/utils": "file:../../utils/utils",
-    "@package-cli-dev/get-npm-info": "file:../../utils/get-npm-info",
-    "npminstall": "^4.11.0",
-    "pkg-dir": "^5.0.0"
   },
   "repository": {
     "type": "git",

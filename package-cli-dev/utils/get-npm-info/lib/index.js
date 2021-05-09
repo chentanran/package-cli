@@ -47,9 +47,19 @@ async function getNpmSemverVersion(baseVersion, npmName, registry) {
     }
 }
 
+// 获取 npm 最后一个版本
+async function getNpmLatestVersion(npmName, registry) {
+    let versions = await getNpmVersions(npmName, registry)
+    if (versions) {
+        return versions = versions.sort((a, b) => semver.gt(b, a))[0]
+    }
+    return null
+}
+
 module.exports = {
     getNpmInfo,
     getNpmVersions,
     getNpmSemverVersion,
-    getDefaultRegistry
+    getDefaultRegistry,
+    getNpmLatestVersion
 }

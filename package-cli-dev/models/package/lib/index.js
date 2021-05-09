@@ -2,10 +2,11 @@
 
 const path = require('path')
 const pkgDir = require('pkg-dir').sync
+const pathExists = require('path-exists').sync
 const npminstall = require('npminstall')
 const { isObject } = require('@package-cli-dev/utils')
 const formatPath = require('@package-cli-dev/format-path')
-const { getDefaultRegistry } = require('@package-cli-dev/get-npm-info')
+const { getDefaultRegistry, getNpmLatestVersion } = require('@package-cli-dev/get-npm-info')
 
 class Package {
     constructor(options) {
@@ -22,13 +23,35 @@ class Package {
         // package的默认路径
         this.storeDir = options.storeDir
         // package 的 name
-        this.packageName = options.name
+        this.packageName = options.packageName
         // package 的 version
-        this.packageVersion = options.version
+        this.packageVersion = options.packageVersion
+        // package 的缓存目录前缀
+        this.cacheFilePathPrefix = this.packageName.replace('/', '_')
+    }
+
+    // 获取最后一个版本
+    async prepare() {
+        if (this.packageVersion === 'latest') {
+            this.packageVersion = await getNpmLatestVersion(this.packageName)
+        }
+    }
+
+    // 下载到本地的缓存路径
+    get cacheFilePath() {
+        return path.resolve(this.storeDir, `_${this.cacheFilePathPrefix}@${this.packageVersion}@${this,this.packageName}`)
     }
 
     // 判断当前 Package 是否存在
-    exists() {}
+    async exists() {
+        console.log('exists')
+        if (this.storeDir) {
+            await this.prepare()
+            return pathExists(this.cacheFilePath)
+        } else {
+            return pathExists(this.targetPath)
+        }
+    }
 
     // 安装 Package
     install() {

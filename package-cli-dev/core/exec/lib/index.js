@@ -10,14 +10,13 @@ const SETTINGS = {
 
 const CACHE_DIR = 'dependencies'
 
-function exec() {
+async function exec() {
     let targetPath = process.env.CLI_TARGET_PATH
     const homePath = process.env.CLI_HOME_PATH
     let storeDir = ''
     log.verbose('targetPath', targetPath)
     log.verbose('homePath', homePath)
 
-    // console.log(arguments, 'arguments')
     const cmdObj = arguments[arguments.length - 1]
     const cmdName = cmdObj.name()
     const packageName = SETTINGS[cmdName]
@@ -38,8 +37,9 @@ function exec() {
             storeDir
         })
 
-        if (packages.exists()) {
+        if (await packages.exists()) {
             // 更新 package
+            console.log('更新 package')
         } else {
             // 安装 package
             packages.install()
@@ -53,6 +53,7 @@ function exec() {
     }
 
    const rootFile = packages.getRootFilePath()
+   // 如果为空 会抛出异常
    if (rootFile) {
     require(rootFile).apply(null, arguments)
    }

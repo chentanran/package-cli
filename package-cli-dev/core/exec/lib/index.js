@@ -20,7 +20,7 @@ async function exec() {
     const cmdObj = arguments[arguments.length - 1]
     const cmdName = cmdObj.name()
     const packageName = SETTINGS[cmdName]
-    const packageVersion = 'latest'
+    const packageVersion = '0.0.11'
 
     let packages = ''
     if (!targetPath) {
@@ -39,7 +39,7 @@ async function exec() {
 
         if (await packages.exists()) {
             // 更新 package
-            console.log('更新 package')
+            packages.update()
         } else {
             // 安装 package
             packages.install()

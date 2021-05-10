@@ -20,7 +20,7 @@ async function exec() {
     const cmdObj = arguments[arguments.length - 1]
     const cmdName = cmdObj.name()
     const packageName = SETTINGS[cmdName]
-    const packageVersion = '0.0.11'
+    const packageVersion = 'latest'
 
     let packages = ''
     if (!targetPath) {
@@ -53,6 +53,7 @@ async function exec() {
     }
 
    const rootFile = packages.getRootFilePath()
+   console.log(rootFile, 'rootFile')
    // 如果为空 会抛出异常
    if (rootFile) {
     require(rootFile).apply(null, arguments)

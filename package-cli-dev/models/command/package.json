@@ -1,7 +1,7 @@
 {
-  "name": "@package-cli-dev/init",
+  "name": "@package-cli-dev/command",
   "version": "0.0.12",
-  "description": "package-cli-dev init",
+  "description": "> TODO: description",
   "author": "chentanran <215920697@qq.com>",
   "homepage": "https://github.com/chentanran/package-cli#readme",
   "license": "ISC",
@@ -27,7 +27,8 @@
     "url": "https://github.com/chentanran/package-cli/issues"
   },
   "dependencies": {
-    "@package-cli-dev/command": "file:../../models/command",
+    "colors": "^1.4.0",
+    "semver": "^7.3.5",
     "@package-cli-dev/log": "file:../../utils/log"
   }
 }

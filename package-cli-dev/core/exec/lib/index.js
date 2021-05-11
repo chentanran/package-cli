@@ -45,7 +45,7 @@ async function exec() {
             packages.install()
         }
     } else {
-        pkg = new Package({
+        packages = new Package({
             targetPath,
             packageName,
             packageVersion
@@ -53,10 +53,9 @@ async function exec() {
     }
 
    const rootFile = packages.getRootFilePath()
-   console.log(rootFile, 'rootFile')
    // 如果为空 会抛出异常
    if (rootFile) {
-    require(rootFile).apply(null, arguments)
+    require(rootFile).call(null, Array.from(arguments))
    }
 }
 

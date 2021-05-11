@@ -1,7 +1,21 @@
 'use strict';
 
-function init(projectName) {
-    console.log('init', projectName, process.env.CLI_TARGET_PATH)
+const Command = require('@package-cli-dev/command')
+const log = require('@package-cli-dev/log')
+
+class InitCommand extends Command {
+    init() {
+        this.projectName = this._argv[0] || ''
+        this.force = !!this._cmd._optionValues.force
+        log.verbose('projectName', this.projectName)
+        log.verbose('force', this.force)
+    }
 }
 
-module.exports = init;
+function init(argv) {
+    return new InitCommand(argv)
+}
+
+
+module.exports = init
+module.exports.InitCommand = InitCommand;

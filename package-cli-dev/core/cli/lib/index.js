@@ -9,7 +9,6 @@ const userHome = require('user-home')
 const commander = require('commander')
 const pathExists = require('path-exists').sync
 const log = require('@package-cli-dev/log')
-const init = require('@package-cli-dev/init')
 const exec = require('@package-cli-dev/exec')
 
 const pkg = require('../package.json')
@@ -21,7 +20,7 @@ const program = new commander.Command()
 async function core() {
     // TODO
     try {
-        prepare()
+        await prepare()
         registerCommand()
     } catch(e) {
         log.error(e.message)
@@ -72,7 +71,6 @@ function registerCommand() {
 
 async function prepare() {
     checkPkgVersion() // 查看包版本
-    checkNodeVersion() // 检查node版本
     checkRoot()
     checkUserHome()
     checkEnv()
@@ -142,14 +140,6 @@ function checkRoot() {
     // 由于 window 不支持 geteuid 方法，没法测试
     const rootCheck = require('root-check')
     rootCheck()
-}
-
-function checkNodeVersion() {
-    const currentVersion = process.version
-    const lowestVersion = constant.LOWEST_NODE_VERSION
-    if (!semver.gte(currentVersion, lowestVersion)) {
-        throw new Error(colors.red(`package-cli 需要安装 v${lowestVersion}以上版本`))
-    }
 }
 
 function checkPkgVersion() {

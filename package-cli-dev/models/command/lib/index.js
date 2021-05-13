@@ -8,6 +8,7 @@ const LOWEST_NODE_VERSION = '12.0.0'
 
 class Command {
     constructor(argv) {
+        // console.log(argv, 'argv')
         if (!argv) {
             throw new Error('参数不能为空！')
         }

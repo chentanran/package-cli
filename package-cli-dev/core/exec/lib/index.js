@@ -15,6 +15,7 @@ async function exec() {
     let targetPath = process.env.CLI_TARGET_PATH
     const homePath = process.env.CLI_HOME_PATH
     let storeDir = ''
+
     log.verbose('targetPath', targetPath)
     log.verbose('homePath', homePath)
 

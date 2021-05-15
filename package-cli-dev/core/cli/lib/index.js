@@ -46,6 +46,7 @@ function registerCommand() {
         } else {
             process.env.LOG_LEVEL = 'info'
         }
+        console.log(process.env.LOG_LEVEL, 'cli')
         log.level = process.env.LOG_LEVEL
         log.verbose('test')
     })

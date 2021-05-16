@@ -66,11 +66,13 @@ class InitCommand extends Command {
             }
         }
         // 2. 是否启动强制更新
-        await this.getProjectInfo()
+        const projectInfo = await this.getProjectInfo()
+        log.verbose('projectInfo', projectInfo)
         // 3. 选择创建项目或组件
     }
 
     async getProjectInfo() {
+        let projectInfo = {}
         // 选择创建项目或组件
         const { type } = await inquirer.prompt({
             type: 'list',
@@ -91,7 +93,7 @@ class InitCommand extends Command {
         log.verbose('type', type)
         // 获取项目的基本信息
         if (type === TYPE_PROJECT) {
-            const o = await inquirer.prompt([
+            const project = await inquirer.prompt([
                 {
                     type: 'input',
                     name: 'projectName',
@@ -119,7 +121,7 @@ class InitCommand extends Command {
                     type: 'input',
                     name: 'projectVersion',
                     message: '请输入项目版本号',
-                    default: '',
+                    default: '1.0.0',
                     validate: function(v) {
                         const done = this.async()
                         const valid = !!semver.valid(v)
@@ -141,10 +143,16 @@ class InitCommand extends Command {
                 }
             ])
 
-            console.log(o)
+            projectInfo = {
+                type,
+                ...project
+            }
         } else if (type === TYPE_COMPONENT) {
-
+            projectInfo = {
+                type
+            }
         }
+        return projectInfo
     }
 
     isCwdEmpty(localPath) {

@@ -1,10 +1,10 @@
-'use strict'
+  'use strict'
 
-const Mongodb = require('../utils/cli-mongodb')
-const { mongodbUrl, mongoDbName } = require('../../config/db')
+  const Mongodb = require('../utils/cli-mongodb')
+  const { mongodbUrl, mongoDbName } = require('../../config/db')
 
-function mongo() {
-  return new Mongodb(mongodbUrl)
-}
+  function mongo() {
+    return new Mongodb(mongodbUrl)
+  }
 
-module.exports = mongo
+  module.exports = mongo

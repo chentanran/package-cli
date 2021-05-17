@@ -7,6 +7,8 @@ const semver = require('semver')
 const Command = require('@package-cli-dev/command')
 const log = require('@package-cli-dev/log')
 
+const getProjectTemplate = require('./getProjectTemplate')
+
 const TYPE_PROJECT = 'project'
 const TYPE_COMPONENT = 'component'
 
@@ -21,15 +23,30 @@ class InitCommand extends Command {
     async exec() {
         try {
             // 1. 准备阶段
-           await this.prepare()
-            // 2. 下载模板
+           const projectInfo = await this.prepare()
+           if (projectInfo) {
+               // 2. 下载模板
+               this.projectInfo = projectInfo
+               this.downloadTemplate()
+           }
             // 3. 安装模板
         } catch(e) {
             log.error(e.message)
         }
     }
 
+    downloadTemplate() {
+        // log.verbose('projectInfo', this.projectInfo)
+        // log.verbose('template', this.template)
+    }
+
     async prepare() {
+        // 0. 判断项目模板是否存在
+        const template = await getProjectTemplate()
+        if (!template || template.length === 0) {
+            throw new Error('项目模板不存在')
+        }
+        this.template = template
         // 1. 判断当前目录是否为空
         const localPath = process.cwd()
         let ifContinues = this.force ? true : false
@@ -67,8 +84,7 @@ class InitCommand extends Command {
         }
         // 2. 是否启动强制更新
         const projectInfo = await this.getProjectInfo()
-        log.verbose('projectInfo', projectInfo)
-        // 3. 选择创建项目或组件
+        return projectInfo
     }
 
     async getProjectInfo() {
@@ -98,7 +114,7 @@ class InitCommand extends Command {
                     type: 'input',
                     name: 'projectName',
                     message: '请输入项目名称',
-                    default: '',
+                    default: 'package-cli-dev',
                     validate: function(v) {
                         // 首字母必须为英文
                         // 尾字母必须为英文或数组， 不能为字符
@@ -140,6 +156,12 @@ class InitCommand extends Command {
                             return v
                         }                        
                     }
+                },
+                {
+                    type: 'list',
+                    name: 'projectTemplate',
+                    message: '请选中项目模板',
+                    choices: this.createTemplateChoice()
                 }
             ])
 
@@ -153,6 +175,15 @@ class InitCommand extends Command {
             }
         }
         return projectInfo
+    }
+
+    createTemplateChoice() {
+        return this.template.map((item) => {
+            return {
+                value: item.npmName,
+                name: item.name
+            }
+        })
     }
 
     isCwdEmpty(localPath) {

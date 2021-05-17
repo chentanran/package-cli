@@ -94,6 +94,7 @@ async function checkGlobalUpdate() {
 
 function checkEnv() {
     const dotenv = require('dotenv')
+    console.log(userHome, 'userHome')
     const dotenvPath = path.resolve(userHome, '.env')
     if (pathExists(dotenvPath)) {
         dotenv.config({

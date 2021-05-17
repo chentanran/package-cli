@@ -1,7 +1,7 @@
 {
-  "name": "@package-cli-dev/init",
+  "name": "@package-cli-dev/request",
   "version": "0.0.12",
-  "description": "package-cli-dev init",
+  "description": "> TODO: description",
   "author": "chentanran <215920697@qq.com>",
   "homepage": "https://github.com/chentanran/package-cli#readme",
   "license": "ISC",
@@ -13,9 +13,6 @@
   "files": [
     "lib"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chentanran/package-cli.git"
@@ -27,11 +24,6 @@
     "url": "https://github.com/chentanran/package-cli/issues"
   },
   "dependencies": {
-    "@package-cli-dev/command": "file:../../models/command",
-    "@package-cli-dev/log": "file:../../utils/log",
-    "@package-cli-dev/request": "file:../../utils/request",
-    "fs-extra": "^10.0.0",
-    "inquirer": "^8.0.0",
-    "semver": "^7.3.5"
+    "axios": "^0.21.1"
   }
 }

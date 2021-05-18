@@ -29,9 +29,12 @@
   "dependencies": {
     "@package-cli-dev/command": "file:../../models/command",
     "@package-cli-dev/log": "file:../../utils/log",
+    "@package-cli-dev/package": "file:../../models/package",
     "@package-cli-dev/request": "file:../../utils/request",
+    "@package-cli-dev/utils": "file:../../utils/utils",
     "fs-extra": "^10.0.0",
     "inquirer": "^8.0.0",
-    "semver": "^7.3.5"
+    "semver": "^7.3.5",
+    "user-home": "^3.0.0"
   }
 }

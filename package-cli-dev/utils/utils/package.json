@@ -8,6 +8,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "@package-cli-dev/core": "^0.0.12",
+    "cli-spinner": "^0.2.10",
     "package-cli-name": "^1.0.0"
   },
   "directories": {

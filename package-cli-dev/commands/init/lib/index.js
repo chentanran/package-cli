@@ -1,11 +1,15 @@
 'use strict';
 
+const path = require('path')
 const fs = require('fs')
 const inquirer = require('inquirer')
 const fse = require('fs-extra')
 const semver = require('semver')
+const userHome = require('user-home')
 const Command = require('@package-cli-dev/command')
 const log = require('@package-cli-dev/log')
+const Package = require('@package-cli-dev/package')
+const { spinnerStart, sleep } = require('@package-cli-dev/utils')
 
 const getProjectTemplate = require('./getProjectTemplate')
 
@@ -27,7 +31,7 @@ class InitCommand extends Command {
            if (projectInfo) {
                // 2. 下载模板
                this.projectInfo = projectInfo
-               this.downloadTemplate()
+               await this.downloadTemplate()
            }
             // 3. 安装模板
         } catch(e) {
@@ -35,9 +39,47 @@ class InitCommand extends Command {
         }
     }
 
-    downloadTemplate() {
-        // log.verbose('projectInfo', this.projectInfo)
-        // log.verbose('template', this.template)
+    async downloadTemplate() {
+        // 拿到模板名称
+        const { projectTemplate } = this.projectInfo
+        // 和已有模板做对比， 拿到这条模板的数据信息
+        const templateInfo = this.template.find(item => item.npmName === projectTemplate)
+        // 获取存放模板的基础路径
+        const targetPath = path.resolve(userHome, '.package-cli-dev', 'template')
+        // 获取存放依赖报的路径
+        const storeDir = path.resolve(userHome, '.package-cli-dev', 'template', 'node_modules')
+        const { npmName, version } = templateInfo
+        // 初始化
+        const templateNpm = new Package({
+            targetPath,
+            storeDir,
+            packageName: npmName,
+            packageVersion: version
+        })
+        // 判断路径下有没有此依赖， 没有就下载， 有就更新 
+        if (!await templateNpm.exists()) {
+            const spinner = spinnerStart('正在下载模板...')
+            await sleep()
+            try {
+                await templateNpm.install()
+                log.success('下载模板成功')
+            } catch(e) {
+                throw e
+            } finally {
+                spinner.stop(true)
+            }
+        } else {
+            const spinner = spinnerStart('正在更新模板...')
+            await sleep()
+            try {
+                await templateNpm.update()
+                log.success('更新模板成功')
+            } catch(e) {
+                throw e
+            } finally {
+                spinner.stop(true)
+            }
+        }
     }
 
     async prepare() {

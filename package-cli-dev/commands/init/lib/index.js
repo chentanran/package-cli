@@ -13,11 +13,16 @@ const { spinnerStart, sleep, spawnAsync } = require('@package-cli-dev/utils')
 
 const getProjectTemplate = require('./getProjectTemplate')
 
+// 模板类型
 const TYPE_PROJECT = 'project'
 const TYPE_COMPONENT = 'component'
 
+// 模板状态
 const TEMPLATE_TYPE_NORMAL = 'normal'
 const TEMPLATE_TYPE_CUSTOM = 'custom'
+
+// 白名单
+const WHITE_COMMAND = ['npm', 'cnpm']
 
 class InitCommand extends Command {
     init() {
@@ -62,6 +67,33 @@ class InitCommand extends Command {
         }
     }
 
+    // 检查 cmd 是否在白名单中
+    checkCommand(cmd) {
+        if (WHITE_COMMAND.includes(cmd)) {
+            return cmd
+        }
+        return null
+    }
+
+    async execCommand(command, message) {
+        let ret = ''
+        if (command) {
+            const cmdArray = command.split(' ')
+            const cmd = this.checkCommand(cmdArray[0])
+            if (!cmd) {
+                throw new Error('命令不存在！命令：' + command)
+            }
+            const args = cmdArray.slice(1)
+            ret = await spawnAsync(cmd, args, {
+                stdio: 'inherit',
+                cwd: process.cwd()
+            })
+        }
+        if (ret !== 0) {
+            throw new Error(message)
+        }
+    }
+
     async installNormalTemplate() {
         let spinner = spinnerStart('正在安装模板...')
         try {
@@ -82,28 +114,8 @@ class InitCommand extends Command {
         }
         // 依赖安装
         const { installCommand, startCommand } = this.templateInfo
-        let ret = ''
-        if (installCommand) {
-            const installCmd = installCommand.split(' ')
-            const cmd = installCmd[0]
-            const args = installCmd.slice(1)
-            ret = await spawnAsync(cmd, args, {
-                stdio: 'inherit',
-                cwd: process.cwd()
-            })
-        }
-        if (ret !== 0) {
-            throw new Error('依赖安装过程失败！')
-        }
-        if (startCommand) {
-            const startCmd = startCommand.split(' ')
-            const cmd = startCmd[0]
-            const args = startCmd.slice(1)
-            ret = await spawnAsync(cmd, args, {
-                stdio: 'inherit',
-                cwd: process.cwd()
-            })
-        }
+        await this.execCommand(installCommand, '依赖安装过程失败！')
+        await this.execCommand(startCommand, '依赖安装过程失败！')
     }
 
     async installCustomTemplate() {

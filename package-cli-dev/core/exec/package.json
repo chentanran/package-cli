@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "@package-cli-dev/log": "file:../../utils/log",
-    "@package-cli-dev/package": "file:../../models/package"
+    "@package-cli-dev/package": "file:../../models/package",
+    "@package-cli-dev/utils": "file:../../utils/utils"
   },
   "repository": {
     "type": "git",

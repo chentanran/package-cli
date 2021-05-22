@@ -9,7 +9,7 @@ const userHome = require('user-home')
 const Command = require('@package-cli-dev/command')
 const log = require('@package-cli-dev/log')
 const Package = require('@package-cli-dev/package')
-const { spinnerStart, sleep } = require('@package-cli-dev/utils')
+const { spinnerStart, sleep, spawnAsync } = require('@package-cli-dev/utils')
 
 const getProjectTemplate = require('./getProjectTemplate')
 
@@ -79,6 +79,30 @@ class InitCommand extends Command {
         } finally {
             spinner.stop(true)
             log.success('模板安装成功')
+        }
+        // 依赖安装
+        const { installCommand, startCommand } = this.templateInfo
+        let ret = ''
+        if (installCommand) {
+            const installCmd = installCommand.split(' ')
+            const cmd = installCmd[0]
+            const args = installCmd.slice(1)
+            ret = await spawnAsync(cmd, args, {
+                stdio: 'inherit',
+                cwd: process.cwd()
+            })
+        }
+        if (ret !== 0) {
+            throw new Error('依赖安装过程失败！')
+        }
+        if (startCommand) {
+            const startCmd = startCommand.split(' ')
+            const cmd = startCmd[0]
+            const args = startCmd.slice(1)
+            ret = await spawnAsync(cmd, args, {
+                stdio: 'inherit',
+                cwd: process.cwd()
+            })
         }
     }
 
@@ -173,7 +197,7 @@ class InitCommand extends Command {
                 })
                 if (confirmDelete) {
                     // 清空当前目录
-                    // fse.emptyDirSync(localPath)
+                    fse.emptyDirSync(localPath)
                 }
                 
             }

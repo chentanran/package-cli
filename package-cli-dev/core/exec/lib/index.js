@@ -4,6 +4,7 @@ const path = require('path')
 const cp = require('child_process')
 const Package = require('@package-cli-dev/package')
 const log = require('@package-cli-dev/log')
+const { spawn } = require('@package-cli-dev/utils')
 
 const SETTINGS = {
     init: '@package-cli-dev/init'
@@ -89,11 +90,11 @@ async function exec() {
 }
 
 // 兼容 window
-function spawn(command, args, options) {
-    const win32 = process.platform === 'win32'
-    const cmd = win32 ? 'cmd' : command
-    const cmdArgs = win32 ? ['/c'].concat(command, args) : args
-    return cp.spawn(cmd, cmdArgs, options || {})
-}
+// function spawn(command, args, options) {
+//     const win32 = process.platform === 'win32'
+//     const cmd = win32 ? 'cmd' : command
+//     const cmdArgs = win32 ? ['/c'].concat(command, args) : args
+//     return cp.spawn(cmd, cmdArgs, options || {})
+// }
 
 module.exports = exec;

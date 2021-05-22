@@ -16,6 +16,9 @@ const getProjectTemplate = require('./getProjectTemplate')
 const TYPE_PROJECT = 'project'
 const TYPE_COMPONENT = 'component'
 
+const TEMPLATE_TYPE_NORMAL = 'normal'
+const TEMPLATE_TYPE_CUSTOM = 'custom'
+
 class InitCommand extends Command {
     init() {
         this.projectName = this._argv[0] || ''
@@ -32,11 +35,55 @@ class InitCommand extends Command {
                // 2. 下载模板
                this.projectInfo = projectInfo
                await this.downloadTemplate()
+               // 3. 安装模板
+               await this.installTemplate()
            }
-            // 3. 安装模板
         } catch(e) {
             log.error(e.message)
         }
+    }
+
+    async installTemplate() {
+        if (this.templateInfo) {
+            if (!this.templateInfo.type) {
+                this.templateInfo.type === TEMPLATE_TYPE_NORMAL
+            }
+            if (this.templateInfo.type === TEMPLATE_TYPE_NORMAL) {
+                // 标准安装
+                await this.installNormalTemplate()
+            } else if (this.templateInfo.type === TEMPLATE_TYPE_CUSTOM) {
+                // 自定义安装
+                await this.installCustomTemplate()
+            } else {
+                throw new Error('无法识别项目模板类型！')
+            }
+        } else {
+            throw new Error('项目模板信息不存在！')
+        }
+    }
+
+    async installNormalTemplate() {
+        let spinner = spinnerStart('正在安装模板...')
+        try {
+            // 获取缓存文件路径
+            const templatePath = path.resolve(this.templateNpm.cacheFilePath, 'template')
+            // 获取当前目录路径
+            const targetPath = process.cwd()
+            // 创建资源目录
+            fse.ensureDirSync(templatePath)
+            fse.ensureDirSync(targetPath)
+            // 复制文件或目录
+            fse.copySync(templatePath, targetPath)
+        } catch(e) {
+            throw e
+        } finally {
+            spinner.stop(true)
+            log.success('模板安装成功')
+        }
+    }
+
+    async installCustomTemplate() {
+        console.log('自定义模板')
     }
 
     async downloadTemplate() {
@@ -49,6 +96,7 @@ class InitCommand extends Command {
         // 获取存放依赖报的路径
         const storeDir = path.resolve(userHome, '.package-cli-dev', 'template', 'node_modules')
         const { npmName, version } = templateInfo
+        this.templateInfo = templateInfo
         // 初始化
         const templateNpm = new Package({
             targetPath,
@@ -62,22 +110,28 @@ class InitCommand extends Command {
             await sleep()
             try {
                 await templateNpm.install()
-                log.success('下载模板成功')
             } catch(e) {
                 throw e
             } finally {
                 spinner.stop(true)
+                if (await templateNpm.exists()) {
+                    log.success('下载模板成功')
+                    this.templateNpm = templateNpm
+                }
             }
         } else {
             const spinner = spinnerStart('正在更新模板...')
             await sleep()
             try {
                 await templateNpm.update()
-                log.success('更新模板成功')
             } catch(e) {
                 throw e
             } finally {
                 spinner.stop(true)
+                if (await templateNpm.exists()) {
+                    log.success('更新模板成功')
+                    this.templateNpm = templateNpm
+                }
             }
         }
     }

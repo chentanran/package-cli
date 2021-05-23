@@ -92,6 +92,9 @@ class Package {
                     version: latestPackageVersion 
                 }]
             })
+            this.packageVersion = latestPackageVersion
+        } else {
+            this.packageVersion = latestPackageVersion
         }
     }
 

@@ -6,12 +6,13 @@ const inquirer = require('inquirer')
 const fse = require('fs-extra')
 const semver = require('semver')
 const userHome = require('user-home')
+const ejs = require('ejs')
 const Command = require('@package-cli-dev/command')
 const log = require('@package-cli-dev/log')
 const Package = require('@package-cli-dev/package')
 const { spinnerStart, sleep, spawnAsync } = require('@package-cli-dev/utils')
 
-const getProjectTemplate = require('./getProjectTemplate')
+const getProjectTemplate = require('./getProjectTemplate');
 
 // 模板类型
 const TYPE_PROJECT = 'project'
@@ -40,11 +41,14 @@ class InitCommand extends Command {
                // 2. 下载模板
                this.projectInfo = projectInfo
                await this.downloadTemplate()
-               // 3. 安装模板
+            //    // 3. 安装模板
                await this.installTemplate()
            }
         } catch(e) {
             log.error(e.message)
+            if (process.env.LOG_LEVEL === 'verbose') {
+                console.log(e)
+            }
         }
     }
 
@@ -94,6 +98,39 @@ class InitCommand extends Command {
         }
     }
 
+    ejsRender(option) {
+        const dir = process.cwd()
+        const projectInfo = this.projectInfo
+        return new Promise((resolve, reject) => {
+            require('glob')('**', {
+                cwd: dir,
+                ignore: option.ignore || '',
+                nodir: true
+            }, (err, files) => {
+                if (err) {
+                    reject(err)
+                }
+                Promise.all(files.map(file => {
+                    const filePath = path.join(dir, file)
+                    return new Promise((res, rej) => {
+                        ejs.renderFile(filePath, projectInfo, {}, (err, result) => {
+                            if (err) {
+                                rej(err)
+                            } else {
+                                fse.writeFileSync(filePath, result)
+                                res(result)
+                            }
+                        })
+                    })
+                })).then(() => {
+                    resolve()
+                }).catch(() => {
+                    reject()
+                })
+            })
+        })
+    }
+
     async installNormalTemplate() {
         let spinner = spinnerStart('正在安装模板...')
         try {
@@ -112,10 +149,13 @@ class InitCommand extends Command {
             spinner.stop(true)
             log.success('模板安装成功')
         }
+        const ignore = ['node_modules/**', 'public/**']
+        await this.ejsRender({ ignore })
         // 依赖安装
         const { installCommand, startCommand } = this.templateInfo
         await this.execCommand(installCommand, '依赖安装过程失败！')
-        await this.execCommand(startCommand, '依赖安装过程失败！')
+        await this.execCommand(startCommand, '启动过程失败！')
+        
     }
 
     async installCustomTemplate() {
@@ -306,6 +346,16 @@ class InitCommand extends Command {
                 type
             }
         }
+
+        // 生成 classname
+        if (projectInfo.projectName) {
+            projectInfo.name = projectInfo.projectName
+            projectInfo.className = require('kebab-case')(projectInfo.projectName).replace(/^-/, '')
+        }
+        if (projectInfo.projectVersion) {
+            projectInfo.version = projectInfo.projectVersion
+        }
+
         return projectInfo
     }
 

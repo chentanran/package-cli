@@ -45,7 +45,7 @@ class InitCommand extends Command {
                await this.installTemplate()
            }
         } catch(e) {
-            log.error(e.message)
+            // log.error(e.message)
             if (process.env.LOG_LEVEL === 'verbose') {
                 console.log(e)
             }
@@ -260,7 +260,14 @@ class InitCommand extends Command {
     }
 
     async getProjectInfo() {
+        function isValidName(v) {
+            return /^[a-zA-Z]+([-][a-zA-Z][a-zA-Z0-9]*|[_][a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*$/.test(v)
+        }
         let projectInfo = {}
+        let isProjectNameValid = false
+        if (isValidName(this.projectName)) {
+            isProjectNameValid = true
+        }
         // 选择创建项目或组件
         const { type } = await inquirer.prompt({
             type: 'list',
@@ -280,64 +287,69 @@ class InitCommand extends Command {
         })
         log.verbose('type', type)
         // 获取项目的基本信息
+        const projectNamePrompt = {
+            type: 'input',
+            name: 'projectName',
+            message: '请输入项目名称',
+            default: 'package-cli-dev',
+            validate: function(v) {
+                // 首字母必须为英文
+                // 尾字母必须为英文或数组， 不能为字符
+                // 字符仅允许“-_”
+                const done = this.async()
+                setTimeout(() => {
+                    if (!isValidName(v)) {
+                        done('请输入合法项目名称(a, a-b, a_b)')
+                        return
+                    }
+                    done(null, true)
+                }, 0)
+            },
+            filter: (v) => {
+                return v
+            }
+        }
+        const projectPrompt = []
+        if (!isProjectNameValid) {
+            projectPrompt.push(projectNamePrompt)
+        }
+        projectPrompt.push(...[{
+            type: 'input',
+            name: 'projectVersion',
+            message: '请输入项目版本号',
+            default: '1.0.0',
+            validate: function(v) {
+                const done = this.async()
+                const valid = !!semver.valid(v)
+                setTimeout(() => {
+                    if (!valid) {
+                        done('请输入合法版本号(1.0.0)')
+                        return
+                    }
+                    done(null, true)
+                }, 0)
+            },
+            filter: (v) => {
+                if (!!semver.valid(v)) {
+                    return semver.valid(v)
+                } else {
+                    return v
+                }                        
+            }
+        },
+        {
+            type: 'list',
+            name: 'projectTemplate',
+            message: '请选中项目模板',
+            choices: this.createTemplateChoice()
+        }])
         if (type === TYPE_PROJECT) {
             const project = await inquirer.prompt([
-                {
-                    type: 'input',
-                    name: 'projectName',
-                    message: '请输入项目名称',
-                    default: 'package-cli-dev',
-                    validate: function(v) {
-                        // 首字母必须为英文
-                        // 尾字母必须为英文或数组， 不能为字符
-                        // 字符仅允许“-_”
-                        const done = this.async()
-                        const valid = /^[a-zA-Z]+([-][a-zA-Z][a-zA-Z0-9]*|[_][a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*$/.test(v)
-                        setTimeout(() => {
-                            if (!valid) {
-                                done('请输入合法项目名称(a, a-b, a_b)')
-                                return
-                            }
-                            done(null, true)
-                        }, 0)
-                    },
-                    filter: (v) => {
-                        return v
-                    }
-                },
-                {
-                    type: 'input',
-                    name: 'projectVersion',
-                    message: '请输入项目版本号',
-                    default: '1.0.0',
-                    validate: function(v) {
-                        const done = this.async()
-                        const valid = !!semver.valid(v)
-                        setTimeout(() => {
-                            if (!valid) {
-                                done('请输入合法版本号(1.0.0)')
-                                return
-                            }
-                            done(null, true)
-                        }, 0)
-                    },
-                    filter: (v) => {
-                        if (!!semver.valid(v)) {
-                            return semver.valid(v)
-                        } else {
-                            return v
-                        }                        
-                    }
-                },
-                {
-                    type: 'list',
-                    name: 'projectTemplate',
-                    message: '请选中项目模板',
-                    choices: this.createTemplateChoice()
-                }
+                ...projectPrompt
             ])
 
             projectInfo = {
+                projectName: this.projectName,
                 type,
                 ...project
             }
@@ -355,7 +367,7 @@ class InitCommand extends Command {
         if (projectInfo.projectVersion) {
             projectInfo.version = projectInfo.projectVersion
         }
-
+        console.log(projectInfo, 'projectInfo')
         return projectInfo
     }
 

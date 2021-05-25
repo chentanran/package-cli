@@ -149,10 +149,7 @@ class InitCommand extends Command {
             log.success('模板安装成功')
         }
         // 从接口中读取忽略文件
-        let templateIgnore = []
-        if (this.template[0].ignore) {
-            templateIgnore = this.template[0].ignore
-        }
+        let templateIgnore = this.templateInfo.ignore || []
         const ignore = ['node_modules/**', ...templateIgnore]
         await this.ejsRender({ ignore })
         // 依赖安装
@@ -163,7 +160,24 @@ class InitCommand extends Command {
     }
 
     async installCustomTemplate() {
-        console.log('自定义模板')
+        // 查下自定义模块的入口文件
+        if (await this.templateNpm.exists()) {
+            const rootFile = this.templateNpm.getRootFilePath()
+            if (fs.existsSync(rootFile)) {
+                log.notice('开始执行自定义模板')
+                const templatePath = path.resolve(this.templateNpm.cacheFilePath, 'template')
+                const options = {
+                    templateInfo: this.templateInfo,
+                    projectInfo: this.projectInfo,
+                    sourcePath: templatePath,
+                    targetPath: process.cwd()
+                }
+                const code = `require('${rootFile}')(${JSON.stringify(options)})`
+                log.verbose('code', code)
+                await spawnAsync('node', ['-e', code], { stdio: 'inherit', cwd: process.cwd() })
+                log.success('自定义模板安装成功')
+            }
+        }
     }
 
     async downloadTemplate() {

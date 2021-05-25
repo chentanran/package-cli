@@ -41,11 +41,10 @@ class InitCommand extends Command {
                // 2. 下载模板
                this.projectInfo = projectInfo
                await this.downloadTemplate()
-            //    // 3. 安装模板
+                // 3. 安装模板
                await this.installTemplate()
            }
         } catch(e) {
-            // log.error(e.message)
             if (process.env.LOG_LEVEL === 'verbose') {
                 console.log(e)
             }
@@ -149,7 +148,12 @@ class InitCommand extends Command {
             spinner.stop(true)
             log.success('模板安装成功')
         }
-        const ignore = ['node_modules/**', 'public/**']
+        // 从接口中读取忽略文件
+        let templateIgnore = []
+        if (this.template.ignore) {
+            templateIgnore = this.template.ignore
+        }
+        const ignore = ['node_modules/**', ...templateIgnore]
         await this.ejsRender({ ignore })
         // 依赖安装
         const { installCommand, startCommand } = this.templateInfo
@@ -251,7 +255,6 @@ class InitCommand extends Command {
                     // 清空当前目录
                     fse.emptyDirSync(localPath)
                 }
-                
             }
         }
         // 2. 是否启动强制更新
@@ -286,11 +289,16 @@ class InitCommand extends Command {
             ]
         })
         log.verbose('type', type)
+        // 获取选择当前模板信息
+        this.template = this.template.filter(item => {
+            return item.tag.includes(type)
+        })
+        const title = type === TYPE_PROJECT ? '项目' : '组件'
         // 获取项目的基本信息
         const projectNamePrompt = {
             type: 'input',
             name: 'projectName',
-            message: '请输入项目名称',
+            message: `请输入${title}名称`,
             default: 'package-cli-dev',
             validate: function(v) {
                 // 首字母必须为英文
@@ -299,7 +307,7 @@ class InitCommand extends Command {
                 const done = this.async()
                 setTimeout(() => {
                     if (!isValidName(v)) {
-                        done('请输入合法项目名称(a, a-b, a_b)')
+                        done(`请输入合法${title}名称(a, a-b, a_b)`)
                         return
                     }
                     done(null, true)
@@ -316,14 +324,14 @@ class InitCommand extends Command {
         projectPrompt.push(...[{
             type: 'input',
             name: 'projectVersion',
-            message: '请输入项目版本号',
+            message: `请输入${title}版本号`,
             default: '1.0.0',
             validate: function(v) {
                 const done = this.async()
                 const valid = !!semver.valid(v)
                 setTimeout(() => {
                     if (!valid) {
-                        done('请输入合法版本号(1.0.0)')
+                        done(`请输入合法版本号(1.0.0)`)
                         return
                     }
                     done(null, true)
@@ -340,7 +348,7 @@ class InitCommand extends Command {
         {
             type: 'list',
             name: 'projectTemplate',
-            message: '请选中项目模板',
+            message: `请选中${title}模板`,
             choices: this.createTemplateChoice()
         }])
         if (type === TYPE_PROJECT) {
@@ -354,8 +362,21 @@ class InitCommand extends Command {
                 ...project
             }
         } else if (type === TYPE_COMPONENT) {
+            const descriptionPrompt = {
+                type: 'input',
+                name: 'componentDescription',
+                message: '请输入组件描述信息',
+                default: '',
+                validate: (v) => {
+                    return !!v
+                }
+            }
+            projectPrompt.push(descriptionPrompt)
+            const component = await inquirer.prompt(projectPrompt)
             projectInfo = {
-                type
+                projectName: this.projectName,
+                type,
+                ...component
             }
         }
 
@@ -367,7 +388,7 @@ class InitCommand extends Command {
         if (projectInfo.projectVersion) {
             projectInfo.version = projectInfo.projectVersion
         }
-        console.log(projectInfo, 'projectInfo')
+
         return projectInfo
     }
 

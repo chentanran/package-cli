@@ -150,8 +150,8 @@ class InitCommand extends Command {
         }
         // 从接口中读取忽略文件
         let templateIgnore = []
-        if (this.template.ignore) {
-            templateIgnore = this.template.ignore
+        if (this.template[0].ignore) {
+            templateIgnore = this.template[0].ignore
         }
         const ignore = ['node_modules/**', ...templateIgnore]
         await this.ejsRender({ ignore })
@@ -388,7 +388,9 @@ class InitCommand extends Command {
         if (projectInfo.projectVersion) {
             projectInfo.version = projectInfo.projectVersion
         }
-
+        if (projectInfo.componentDescription) {
+            projectInfo.description = projectInfo.componentDescription
+        }
         return projectInfo
     }
 

@@ -34,7 +34,7 @@ async function ejsRender(option) {
   })
 }
 
-function install(options) {
+async function install(options) {
   const descriptionPrompt = {
     type: 'input',
     name: 'description',

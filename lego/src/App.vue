@@ -1,22 +1,12 @@
 <template>
-  <div>
-    <Editor />
+  <div class="app-container">
+    <router-view />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-// import Home from './components/Home.vue'
-import Editor from './components/Editor.vue'
-
+import { defineComponent } from 'vue'
 export default defineComponent({
-  name: 'App',
-  components: {
-    // Home
-    Editor
-  }
-});
+  name: 'App'
+})
 </script>
-
-<style>
-</style>

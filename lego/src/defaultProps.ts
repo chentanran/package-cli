@@ -30,7 +30,7 @@ export const commonDefaultProps: CommonComponentProps = {
   url: '',
   // size
   height: '',
-  width: '373px',
+  width: '100%',
   paddingLeft: '0px',
   paddingRight: '0px',
   paddingTop: '0px',
@@ -44,7 +44,7 @@ export const commonDefaultProps: CommonComponentProps = {
   boxShadow: '0 0 0 #000000',
   opacity: '1',
   // position and x,y
-  position: 'absolute',
+  position: 'relative',
   left: '0',
   top: '0',
   right: '0'

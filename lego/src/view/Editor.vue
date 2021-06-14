@@ -11,17 +11,27 @@
       <a-layout-content class="preview-container">
         <p>画布区域</p>
         <div class="preview-list" id="canvas-area">
-          <component 
+          <EditWrapper 
             v-for="component in components" 
             :key="component.id"
-            :is="component.name"
-            v-bind="component.props"
-          />
+            :id="component.id"
+            :active="component.id === (currentElement && currentElement.id)"
+            @set-active="setActive"
+          >
+            <Component
+              :is="component.name"
+              v-bind="component.props"
+            />
+          </EditWrapper>
         </div>
       </a-layout-content>
     </a-layout>
     <a-layout-sider width="300" style="background: #fff" class="settings-panel">
       组件属性
+      <PropsTable 
+        v-if="currentElement && currentElement.id"
+        :props="currentElement.props"
+      />
     </a-layout-sider>  
   </a-layout>
 </div>
@@ -34,21 +44,33 @@ import { GlobalDataProps } from '../store/index'
 import LText from '../components/LText.vue'
 import ComponentsList from '../components/ComponentsList.vue'
 import { defaultTextTemplates } from '../defaultTemplates'
+import { CommonComponentProps } from '../defaultProps'
+import EditWrapper from '../components/EditWrapper.vue'
+import { ComponentData } from '../store/editor'
+import PropsTable from '../components/PropsTable.vue'
 export default defineComponent({
   components: {
     LText,
-    ComponentsList
+    ComponentsList,
+    EditWrapper,
+    PropsTable
   },
   setup() {
     const store = useStore<GlobalDataProps>()
     const components = computed(() => store.state.editor.components)
-    const addItem = (props: any) => {
+    const currentElement = computed<ComponentData | null>(() => store.getters.getCurrentElement)
+    const addItem = (props: CommonComponentProps) => {
       store.commit('addComponent', props)
+    }
+    const setActive = (id: string) => {
+      store.commit('setActive', id)
     }
     return {
       components,
       addItem,
-      defaultTextTemplates
+      defaultTextTemplates,
+      setActive,
+      currentElement
     }
   }
 })

@@ -4,7 +4,12 @@ import {
 	Card,
 	Row,
 	Col,
-	Dropdown
+	Dropdown,
+	Input,
+	InputNumber,
+	Slider,
+	Radio,
+	Select
 } from 'ant-design-vue'
 
 const components = [
@@ -13,7 +18,12 @@ const components = [
 	Card,
 	Row,
 	Col,
-	Dropdown
+	Dropdown,
+	Input,
+	InputNumber,
+	Slider,
+	Radio,
+	Select
 ]
 
 export default components

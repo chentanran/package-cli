@@ -31,6 +31,7 @@
       <PropsTable 
         v-if="currentElement && currentElement.id"
         :props="currentElement.props"
+        @change="handleChange"
       />
     </a-layout-sider>  
   </a-layout>
@@ -47,7 +48,7 @@ import { defaultTextTemplates } from '../defaultTemplates'
 import { CommonComponentProps } from '../defaultProps'
 import EditWrapper from '../components/EditWrapper.vue'
 import { ComponentData } from '../store/editor'
-import PropsTable from '../components/PropsTable.vue'
+import PropsTable from '../components/PropsTable'
 export default defineComponent({
   components: {
     LText,
@@ -65,12 +66,17 @@ export default defineComponent({
     const setActive = (id: string) => {
       store.commit('setActive', id)
     }
+    const handleChange = (e: any) => {
+      console.log(e, 'e')
+      store.commit('updateComponent', e)
+    }
     return {
       components,
       addItem,
       defaultTextTemplates,
       setActive,
-      currentElement
+      currentElement,
+      handleChange
     }
   }
 })

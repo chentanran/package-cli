@@ -1,7 +1,7 @@
 import { Module } from 'vuex'
 import { GlobalDataProps } from './index'
 import { v4 as uuidv4 } from 'uuid'
-import { TextComponentProps, CommonComponentProps } from '../defaultProps'
+import { TextComponentProps } from '../defaultProps'
 
 export interface EditorProps {
 	// 供中间编辑器渲染的数组
@@ -41,6 +41,12 @@ const editor: Module<EditorProps, GlobalDataProps> = {
 		},
 		setActive(state, currentId: string) {
 			state.currentElement = currentId
+		},
+		updateComponent(state, { key, value }) {
+			const updatedComponent = state.components.find((component) => component.id === state.currentElement)
+			if (updatedComponent) {
+				updatedComponent.props[key as keyof TextComponentProps] = value
+			}
 		}
 	},
 	getters: {

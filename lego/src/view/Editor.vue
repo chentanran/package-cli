@@ -48,7 +48,8 @@ import { defaultTextTemplates } from '../defaultTemplates'
 import { CommonComponentProps } from '../defaultProps'
 import EditWrapper from '../components/EditWrapper.vue'
 import { ComponentData } from '../store/editor'
-import PropsTable from '../components/PropsTable'
+import PropsTable from '../components/PropsTable.vue'
+
 export default defineComponent({
   components: {
     LText,

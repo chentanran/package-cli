@@ -30,7 +30,7 @@
       组件属性
       <PropsTable 
         v-if="currentElement && currentElement.id"
-        :props="currentElement.props"
+        :props="currentElement && currentElement.props"
         @change="handleChange"
       />
     </a-layout-sider>  
@@ -47,7 +47,7 @@ import ComponentsList from '../components/ComponentsList.vue'
 import { defaultTextTemplates } from '../defaultTemplates'
 import { CommonComponentProps } from '../defaultProps'
 import EditWrapper from '../components/EditWrapper.vue'
-import { ComponentData } from '../store/editor'
+import { ComponentData } from '../store/editor' 
 import PropsTable from '../components/PropsTable.vue'
 
 export default defineComponent({
@@ -60,7 +60,7 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const components = computed(() => store.state.editor.components)
-    const currentElement = computed<ComponentData | null>(() => store.getters.getCurrentElement)
+    const currentElement = computed<ComponentData | undefined>(() => store.getters.getCurrentElement)
     const addItem = (props: CommonComponentProps) => {
       store.commit('addComponent', props)
     }

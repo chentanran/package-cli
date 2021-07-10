@@ -30,7 +30,7 @@
       组件属性
       <PropsTable 
         v-if="currentElement && currentElement.id"
-        :props="currentElement && currentElement.props"
+        :props="currentElement.props"
         @change="handleChange"
       />
     </a-layout-sider>  
@@ -60,7 +60,7 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const components = computed(() => store.state.editor.components)
-    const currentElement = computed<ComponentData | undefined>(() => store.getters.getCurrentElement)
+    const currentElement = computed<ComponentData | null>(() => store.getters.getCurrentElement)
     const addItem = (props: CommonComponentProps) => {
       store.commit('addComponent', props)
     }

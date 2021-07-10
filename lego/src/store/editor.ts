@@ -12,7 +12,7 @@ export interface EditorProps {
 
 export interface ComponentData {
 	// 
-	props: { [key: string]: any };
+	props: Partial<TextComponentProps>;
 	//
 	id: string;
 	// 业务组件库名称 l-text l-image 等等
@@ -20,7 +20,7 @@ export interface ComponentData {
 }
 
 export const testComponents: ComponentData[] = [
-	{ id: uuidv4(), name: 'l-text', props: { text: 'hello', fontSize: '20px', paddingLeft: '20px', lineHeight: "1" } },
+	{ id: uuidv4(), name: 'l-text', props: { text: 'hello', fontSize: '20px', paddingLeft: '20px', lineHeight: "1", color: '#000000' } },
 	{ id: uuidv4(), name: 'l-text', props: { text: 'hello2', fontSize: '30px', paddingLeft: '40px', textAlign: 'center' } },
 	{ id: uuidv4(), name: 'l-text', props: { text: 'hello3', fontSize: '40px', paddingLeft: '60px', fontFamily: '宋体' } },
 ]

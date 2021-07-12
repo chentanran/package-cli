@@ -1,5 +1,6 @@
 <template>
 <div class="content-container">
+  <Upload action="test.url" />
   <template-list :list="testData"></template-list>
 </div>
 </template>
@@ -10,9 +11,11 @@ import { computed, defineComponent } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import TemplateList from '../components/TemplateList.vue'
+import Upload from '../components/Upload.vue'
 export default defineComponent({
   components: {
-    TemplateList
+    TemplateList,
+    Upload
   },
   setup() {
     const store = useStore<GlobalDataProps>()

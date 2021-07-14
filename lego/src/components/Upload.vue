@@ -1,9 +1,16 @@
 <template>
 	<div class="file-upload">
-		<button @click="triggerUpload" :disabled="isUploading">
-			<span v-if="isUploading">正在上传</span>
-			<span v-else>点击上传</span>
-		</button>
+		<div class="isUploading" @click="triggerUpload">
+			<slot v-if="isUploading" name="loading">
+				<button disabled>正在上传</button>
+			</slot>
+			<slot name="uploaded" v-else-if="lastFileData && lastFileData.loaded" :uploadedData="lastFileData.data">
+				<button>点击上传</button>
+			</slot>
+			<slot v-else name="default">
+				<button>点击上传</button>
+			</slot>
+		</div>
 		<input
 			ref="fileInput"
 			type="file"
@@ -26,6 +33,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, computed } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
+import { last } from 'lodash-es'
 import axios from 'axios'
 type UploadStatus = 'ready' | 'loading' | 'success' | 'error'
 export interface UploadFile {
@@ -34,6 +42,7 @@ export interface UploadFile {
 	name: string;
 	status: UploadStatus;
 	raw: File;
+	resp?: any;
 }
 
 export default defineComponent({
@@ -45,11 +54,22 @@ export default defineComponent({
 	},
 	setup(props) {
 		const fileInput = ref<null | HTMLInputElement>(null)
-		const fileStatus = ref<UploadStatus>('ready')
+		// const fileStatus = ref<UploadStatus>('ready')
 		const uploadedFiles = ref<UploadFile[]>([])
 
 		const isUploading = computed(() => {
 			return uploadedFiles.value.some(file => file.status === 'loading')
+		})
+
+		const lastFileData = computed(() => {
+			const lastFile = last(uploadedFiles.value)
+			if (lastFile) {
+				return {
+					loaded: lastFile.status === 'success',
+					data: lastFile.resp
+				}
+			}
+			return false
 		})
 
 		const removeFile = (id: string) => {
@@ -78,17 +98,18 @@ export default defineComponent({
 					raw: uploadFile
 				})
 				uploadedFiles.value.push(fileObj)
-				fileStatus.value = 'loading'
+				// fileStatus.value = 'loading'
 				axios.post(props.action, formData, {
 					headers: {
 						'Content-Type': 'multipart/form-data'
 					}
 				}).then(resp => {
-					fileStatus.value = 'success'
+					// fileStatus.value = 'success'
 					fileObj.status = 'success'
+					fileObj.resp = resp.data
 					console.log(resp.data)
 				}).catch(() => {
-					fileStatus.value = 'error'
+					// fileStatus.value = 'error'
 					fileObj.status = 'error'
 				}).finally(() => {
 					if (fileInput.value) {
@@ -101,11 +122,12 @@ export default defineComponent({
 		return {
 			triggerUpload,
 			fileInput,
-			fileStatus,
+			// fileStatus,
 			handleFileChange,
 			isUploading,
 			uploadedFiles,
-			removeFile
+			removeFile,
+			lastFileData
 		}
 	}
 })

@@ -31,11 +31,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, computed } from 'vue'
+import { defineComponent, reactive, ref, computed, PropType } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import { last } from 'lodash-es'
 import axios from 'axios'
 type UploadStatus = 'ready' | 'loading' | 'success' | 'error'
+type CheckUpload = (file: File) => boolean | Promise<File>
 export interface UploadFile {
 	uid: string;
 	size: number;
@@ -50,6 +51,9 @@ export default defineComponent({
 		action: {
 			type: String,
 			required: true
+		},
+		beforeUpload: {
+			type: Function as PropType<CheckUpload>
 		}
 	},
 	setup(props) {
@@ -83,12 +87,8 @@ export default defineComponent({
 			}
 		}
 
-		const handleFileChange = (e: Event) => {
-			const target = e.target as HTMLInputElement
-			const files = target.files
-			if (files) {
-				const uploadFile = files[0]
-				const formData = new FormData()
+		const postFile = (uploadFile: File) => {
+			const formData = new FormData()
 				formData.append(uploadFile.name, uploadFile)
 				const fileObj = reactive<UploadFile>({
 					uid: uuidv4(),
@@ -116,6 +116,31 @@ export default defineComponent({
 						fileInput.value.value = ''
 					}
 				})
+		}
+
+		const handleFileChange = (e: Event) => {
+			const target = e.target as HTMLInputElement
+			const files = target.files
+			if (files) {
+				const uploadFile = files[0]
+				if (props.beforeUpload) {
+					const result = props.beforeUpload(uploadFile)
+					if (result && result instanceof Promise) {
+						result.then(processedFile => {
+							if (processedFile instanceof File) {
+								postFile(processedFile)
+							} else {
+								throw new Error('beforeupload Promise 应该返回一个文件对象')
+							}
+						}).catch(e => {
+							console.error(e)
+						})
+					} else if (result === true) {
+						postFile(uploadFile)
+					}
+				} else {
+					postFile(uploadFile)
+				}
 			}
 		}
 

@@ -1,6 +1,10 @@
 <template>
 	<div class="file-upload">
-		<div class="isUploading" @click="triggerUpload">
+		<div 
+			class="upload-area"
+			:class="{ 'is-dragover': drag && isDragOver }"
+			v-on="events"
+		>
 			<slot v-if="isUploading" name="loading">
 				<button disabled>正在上传</button>
 			</slot>
@@ -54,12 +58,29 @@ export default defineComponent({
 		},
 		beforeUpload: {
 			type: Function as PropType<CheckUpload>
+		},
+		onProgress: {
+			type: Function as PropType<(file: File) => void>
+		},
+		onSuccess: {
+			type: Function as PropType<(res: any, file: UploadFile, fileList: UploadFile[]) => void>
+		},
+		onError: {
+			type: Function as PropType<(e: Error, file: UploadFile, fileList: UploadFile[]) => void>
+		},
+		onChange: {
+			type: Function as PropType<(file: File | UploadFile, fileList: File[] | UploadFile[]) => void>
+		},
+		drag: {
+			type: Boolean,
+			default: false
 		}
 	},
 	setup(props) {
 		const fileInput = ref<null | HTMLInputElement>(null)
 		// const fileStatus = ref<UploadStatus>('ready')
 		const uploadedFiles = ref<UploadFile[]>([])
+		const isDragOver = ref(false)
 
 		const isUploading = computed(() => {
 			return uploadedFiles.value.some(file => file.status === 'loading')
@@ -78,7 +99,7 @@ export default defineComponent({
 
 		const removeFile = (id: string) => {
 			uploadedFiles.value = uploadedFiles.value.filter(item => item.uid !== id)
-			console.log(uploadedFiles.value[0], '-------', id)
+			// console.log(uploadedFiles.value[0], '-------', id)
 		}
 
 		const triggerUpload = () => {
@@ -102,15 +123,32 @@ export default defineComponent({
 				axios.post(props.action, formData, {
 					headers: {
 						'Content-Type': 'multipart/form-data'
+					},
+					onUploadProgress: function (progressEvent) {
+						if (props.onProgress) {
+							props.onProgress(progressEvent)
+						}
 					}
 				}).then(resp => {
 					// fileStatus.value = 'success'
 					fileObj.status = 'success'
 					fileObj.resp = resp.data
-					console.log(resp.data)
-				}).catch(() => {
+					// console.log(resp.data)
+					if (props.onSuccess) {
+						props.onSuccess(resp.data, fileObj, uploadedFiles.value)
+					}
+					if (props.onChange) {
+						props.onChange(fileObj, uploadedFiles.value)
+					}
+				}).catch((e) => {
 					// fileStatus.value = 'error'
 					fileObj.status = 'error'
+					if (props.onError) {
+						props.onError(e, fileObj, uploadedFiles.value)
+					}
+					if (props.onChange) {
+						props.onChange(fileObj, uploadedFiles.value)
+					}
 				}).finally(() => {
 					if (fileInput.value) {
 						fileInput.value.value = ''
@@ -118,11 +156,12 @@ export default defineComponent({
 				})
 		}
 
-		const handleFileChange = (e: Event) => {
-			const target = e.target as HTMLInputElement
-			const files = target.files
+		const uploadFiles = (files: null | FileList) => {
 			if (files) {
 				const uploadFile = files[0]
+				if (props.onChange) {
+					props.onChange(uploadFile, Array.from(files))
+				}
 				if (props.beforeUpload) {
 					const result = props.beforeUpload(uploadFile)
 					if (result && result instanceof Promise) {
@@ -144,6 +183,37 @@ export default defineComponent({
 			}
 		}
 
+		let events: { [key: string]: (e: any) => void } = {
+			'click': triggerUpload
+		}
+
+		const handleFileChange = (e: Event) => {
+			const target = e.target as HTMLInputElement
+			uploadFiles(target.files)
+		}
+
+		const handleDrag = (e: DragEvent, over: boolean) => {
+			e.preventDefault()
+			isDragOver.value = over
+		}
+
+		const handleDrop = (e: DragEvent) => {
+			e.preventDefault()
+			isDragOver.value = false
+			if (e.dataTransfer) {
+				uploadFiles(e.dataTransfer.files)
+			}
+		}
+
+		if (props.drag) {
+			events = {
+				...events,
+				'dragover': (e: DragEvent) => { handleDrag(e, true) },
+				'dragleave': (e: DragEvent) => { handleDrag(e, false) },
+				'drop': handleDrop
+			}
+		}
+
 		return {
 			triggerUpload,
 			fileInput,
@@ -152,7 +222,9 @@ export default defineComponent({
 			isUploading,
 			uploadedFiles,
 			removeFile,
-			lastFileData
+			lastFileData,
+			isDragOver,
+			events
 		}
 	}
 })

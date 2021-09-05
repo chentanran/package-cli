@@ -183,6 +183,47 @@ describe('upload components', () => {
 		await flushPromises()
 		expect(wrapper.findAll('li').length)
 	})
+	it('手动上传测试', async () => {
+		mockedAxios.post.mockResolvedValueOnce({ data: { url: 'dummy.url' } })
+		const wrapper = shallowMount(Upload, {
+			props: {
+				action: 'test.url',
+				drag: true,
+				autoUpload: false
+			}
+		})
+		const fileInput = wrapper.get('input').element as HTMLInputElement
+		setInputValue(fileInput)
+		await wrapper.get('input').trigger('change')
+		expect(wrapper.findAll('li').length).toBe(1)
+		const firstItem = wrapper.get('li:first-child')
+		expect(firstItem.classes()).toContain('upload-ready')
+		wrapper.vm.uploadFiles()
+		expect(mockedAxios.post).toHaveBeenCalled()
+		await flushPromises()
+		expect(firstItem.classes()).toContain('upload-success')
+	})
+	it('图片预览测试', async () => {
+		mockedAxios.post.mockResolvedValueOnce({ data: { url: 'dummy.url' } })
+		window.URL.createObjectURL = jest.fn(() => {
+			return 'test.url'
+		})
+		const wrapper = mount(Upload, {
+			props: {
+				action: 'test.url',
+				listType: 'picture'
+			}
+		})
+		expect(wrapper.get('ul').classes()).toContain('upload-list-picture')
+		const fileInput = wrapper.get('input').element as HTMLInputElement
+		setInputValue(fileInput)
+		await wrapper.get('input').trigger('change')
+		await flushPromises()
+		expect(wrapper.findAll('li').length).toBe(1)
+		expect(wrapper.find('li:first-child img').exists()).toBeTruthy()
+		const firstImg = wrapper.get('li:first-child img')
+		expect(firstImg.attributes('src')).toEqual('test.url')
+	})
 	afterEach(() => {
 		mockedAxios.post.mockReset()
 	})

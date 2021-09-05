@@ -1,7 +1,7 @@
 import { Module } from 'vuex'
 import { GlobalDataProps } from './index'
 import { v4 as uuidv4 } from 'uuid'
-import { TextComponentProps } from '../defaultProps'
+import { TextComponentProps, ImageComponentProps } from '../defaultProps'
 
 export interface EditorProps {
 	// 供中间编辑器渲染的数组
@@ -12,11 +12,11 @@ export interface EditorProps {
 
 export interface ComponentData {
 	// 
-	props: Partial<TextComponentProps>;
+	props: Partial<TextComponentProps & ImageComponentProps>;
 	//
 	id: string;
 	// 业务组件库名称 l-text l-image 等等
-	name: string;
+	name: 'l-text' | 'l-image';
 }
 
 export const testComponents: ComponentData[] = [

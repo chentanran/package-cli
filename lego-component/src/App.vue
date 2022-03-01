@@ -1,10 +1,20 @@
 <template>
   <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <hello-world></hello-world>
   </div>
-  <router-view/>
 </template>
+
+<script lang="ts">
+  import { defineComponent, getCurrentInstance, inject, onMounted } from "vue";
+  export default defineComponent({
+    setup() {
+      console.log(inject('test'))
+      onMounted(() => {
+        getCurrentInstance()?.appContext.config.globalProperties.$echo()
+      })
+    }
+  })
+</script>
 
 <style lang="scss">
 #app {

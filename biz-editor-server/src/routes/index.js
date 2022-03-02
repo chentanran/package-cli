@@ -28,7 +28,7 @@ router.get('/api/db-check', async (ctx, next) => {
       name: '哇哇哇哇',
       ENV,
       version: packageInfo.version,
-      mysqlConn: mysqlRes.length,
+      mysqlConn: !!mysqlRes.length,
       // mongodbConn,
       redisConn: redisTestVal != null,
     }

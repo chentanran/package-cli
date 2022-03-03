@@ -11,10 +11,10 @@ const utilsInfos = require('./utils')
 const channelInfos = require('./channel')
 
 module.exports = {
-    ...errorInfos,
-    ...validateInfos,
-    ...usersInfos,
-    ...worksInfos,
-    ...utilsInfos,
-    ...channelInfos,
+  ...errorInfos,
+  ...validateInfos,
+  ...usersInfos,
+  ...worksInfos,
+  ...utilsInfos,
+  ...channelInfos,
 }

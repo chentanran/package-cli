@@ -6,16 +6,16 @@ const { jwtExpiresIn } = require('../config/index')
 const verify = util.promisify(jwt.verify)
 
 async function jwtVerify(token) {
-	const data = await verify(token.split(' ')[1], JWT_SECRET)
-	return data
+  const data = await verify(token.split(' ')[1], JWT_SECRET)
+  return data
 }
 
 function jwtSign(data) {
-	const token = jwt.sign(data, JWT_SECRET, { expiresIn: jwtExpiresIn })
-	return token
+  const token = jwt.sign(data, JWT_SECRET, { expiresIn: jwtExpiresIn })
+  return token
 }
 
 module.exports = {
-	jwtVerify,
-	jwtSign
+  jwtVerify,
+  jwtSign,
 }
